@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>항공편 검색</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 15px;
+      display: block;
+    }
+    select, input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1em;
+    }
+    button {
+      margin-top: 25px;
+      padding: 12px;
+      width: 100%;
+      background-color: #28a745;
+      color: white;
+      font-size: 1.1em;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .map-select {
+      max-height: 150px;
+      overflow-y: scroll;
+      background: linear-gradient(to bottom right, #e6f2ff, #ffffff);
+      border: 1px solid #ccc;
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h2>항공편 검색 조건</h2>
+  <form action="/search" method="post">
+    <label for="departureAirport">출발 공항</label>
+    <select name="departureAirport" id="departureAirport" class="map-select" required>
+      <option value="CJU">제주 (CJU)</option>
+      <option value="GMP">김포 (GMP)</option>
+      <option value="PUS">부산 (PUS)</option>
+      <option value="ICN">인천 (ICN)</option>
+      <option value="CJJ">청주 (CJJ)</option>
+    </select>
+
+    <label for="arrivalAirport">도착 공항</label>
+    <select name="arrivalAirport" id="arrivalAirport" class="map-select" required>
+      <option value="GMP">김포 (GMP)</option>
+      <option value="CJU">제주 (CJU)</option>
+      <option value="PUS">부산 (PUS)</option>
+      <option value="ICN">인천 (ICN)</option>
+      <option value="CJJ">청주 (CJJ)</option>
+    </select>
+
+    <label for="departureDate">탑승 날짜 (YYYYMMDD)</label>
+    <input type="text" id="departureDate" name="departureDate" placeholder="예: 20250721" required>
+
+    <label for="startTime">출발 시간 범위 시작 (HHMM)</label>
+    <input type="text" id="startTime" name="startTime" placeholder="예: 0800" required>
+
+    <label for="endTime">출발 시간 범위 끝 (HHMM)</label>
+    <input type="text" id="endTime" name="endTime" placeholder="예: 1200" required>
+
+    <button type="submit">항공편 검색</button>
+  </form>
+</body>
+</html>
