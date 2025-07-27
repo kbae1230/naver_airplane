@@ -122,11 +122,3 @@ def add_comment_to_page(comment_text):
     else:
         print(f"❌ 댓글 추가 실패: 상태코드 {response.status_code}")
         print(response.text)
-
-def main():
-    data = load_json_data(DATA_PATH)
-    create_notion_page(data)
-    add_comment_to_page('hihi')
-    
-if __name__ == "__main__":
-    main()
