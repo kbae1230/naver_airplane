@@ -1,18 +1,8 @@
 import os
+from dotenv import load_dotenv
 
-def load_env(path=".env"):
-    if not os.path.exists(path):
-        print(f"{path} 파일이 존재하지 않습니다.")
-        return
+load_dotenv()
 
-    with open(path, "r", encoding="utf-8") as f:
-        for line in f:
-            if line.strip() == "" or line.startswith("#"):
-                continue
-            if "=" in line:
-                key, value = line.strip().split("=", 1)
-                os.environ[key] = value.strip().strip("'").strip('"')
-                
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 NOTION_TOKEN = os.getenv("NOTION_TOKEN")
