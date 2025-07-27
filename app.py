@@ -97,9 +97,10 @@ def run_monitoring():
         try:
             response = requests.post(url, headers=headers, json=payload)
             raw_text = response.content.decode("utf-8")
-            json_str = raw_text.lstrip("data:").strip()
-            data = json.loads(json_str)
+            json_lines = [line for line in raw_text.splitlines() if line.startswith("data:")]
 
+            json_str = json_lines[-1].lstrip("data:").strip()
+            data = json.loads(json_str)
             filtered_result = filter_flights(data, start_time, end_time)
 
             if not filtered_result:
@@ -110,7 +111,7 @@ def run_monitoring():
                 existing_fare = existing_data.get("fare", float("inf")) if existing_data else None
 
                 if not existing_fare or new_fare != existing_fare:
-                    save_data(filtered_result)
+                    save_data(filtered_result, DATA_PATH)
                     notion_data = load_json_data(DATA_PATH)
                     create_notion_page(notion_data)
                     st.success(f"✅ 새로운 최저가 발견! {new_fare:,}원으로 Notion 업데이트 완료")
