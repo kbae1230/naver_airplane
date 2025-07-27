@@ -1,9 +1,10 @@
 import os
 import json
-import datetime
+from datetime import datetime, timedelta
 
 from config import DATA_PATH
 
+kst_now = datetime.utcnow() + timedelta(hours=9)
 
 def load_existing_data(path=DATA_PATH):
     if os.path.exists(path):
@@ -54,7 +55,7 @@ def filter_flights(data, start, end):
     arr = segment.get("arrival", {})
     airline_code = segment.get("airlineCode", "")
     airline_name = data.get("status", {}).get("airlinesCodeMap", {}).get(airline_code, airline_code)
-    check_time = datetime.datetime.now().isoformat(timespec='seconds')
+    check_time = kst_now.strftime("%Y-%m-%d %H:%M:%S")
 
     result = {
         "check": check_time,

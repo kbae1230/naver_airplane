@@ -1,12 +1,15 @@
 import streamlit as st
 import requests
 import json
-import datetime
+from datetime import datetime, timedelta
 import time
 
 from config import DATA_PATH, AIRPORT
 from json2notion import load_json_data, create_notion_page
 from processing import filter_flights, load_existing_data, save_data
+
+kst_now = datetime.utcnow() + timedelta(hours=9)
+kst_today = kst_now.date()
 
 st.set_page_config(page_title="최저가 항공권 추적기", layout="centered")
 st.title("✈️ 항공편 추적기")
@@ -18,7 +21,7 @@ AIRPORT.sort()
 # 입력 UI
 departure_airport = st.selectbox("출발 공항", AIRPORT)
 arrival_airport = st.selectbox("도착 공항", AIRPORT)
-departure_date_obj = st.date_input("탑승 날짜", value=datetime.date.today())
+departure_date_obj = st.date_input("탑승 날짜", value=kst_today)
 departure_date = departure_date_obj.strftime("%Y%m%d")
 time_options = [f"{h:02d}00" for h in range(0, 24)]
 start_time = st.selectbox("출발 시간 범위 시작", time_options, index=8)  # 기본: 08시
