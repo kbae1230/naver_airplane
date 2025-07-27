@@ -1,19 +1,37 @@
-
+import os
+import json
 import datetime
 
-def time_in_range(time_str, start="0800", end="1200"):
+from config import DATA_PATH
+
+
+def load_existing_data(path=DATA_PATH):
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as f:
+            try:
+                return json.load(f)
+            except json.JSONDecodeError:
+                print("❌ 기존 data.json 파싱 실패")
+                return None
+    return None
+
+def save_data(data, path=DATA_PATH):
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+def time_in_range(time_str, start, end):
     return start <= time_str <= end
 
 def get_min_fare_for_flight(fares):
     return min(fare.get("adultTotalFare", float('inf')) for fare in fares if fare.get("adultTotalFare") is not None)
 
-def filter_flights(data):
+def filter_flights(data, start, end):
     filtered = []
     for flight in data.get("flights", []):
         segment = flight.get("segment", {})
         dep_time = segment.get("departure", {}).get("time", "")
         arr_time = segment.get("arrival", {}).get("time", "")
-        if time_in_range(dep_time) and time_in_range(arr_time):
+        if time_in_range(dep_time, start, end) and time_in_range(arr_time, start, end):
             min_fare = get_min_fare_for_flight(flight.get("fares", []))
             filtered.append((flight, min_fare))
 

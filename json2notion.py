@@ -5,10 +5,6 @@ import logging
 
 from config import *
 
-
-# 환경 변수에서 민감한 정보 가져오기
-
-
 headers = {
     "Authorization": f"Bearer {NOTION_TOKEN}",
     "Content-Type": "application/json",
