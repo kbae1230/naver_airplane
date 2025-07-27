@@ -3,8 +3,6 @@ import json
 from datetime import datetime, timedelta, timezone
 
 
-kst_now = datetime.now(timezone.utc) + timedelta(hours=9)
-
 def load_existing_data(path):
     if os.path.exists(path):
         with open(path, "r", encoding="utf-8") as f:
@@ -38,22 +36,20 @@ def filter_flights(data, start, end):
     if not filtered:
         return None
 
-    # 같은 편명 중 최소가만 남기기
     flight_dict = {}
     for flight, fare in filtered:
         flight_num = flight.get("segment", {}).get("flightNumber", "")
         if flight_num not in flight_dict or fare < flight_dict[flight_num][1]:
             flight_dict[flight_num] = (flight, fare)
 
-    # 전체 중 가장 싼 항공편 하나 추출
     lowest_flight, lowest_fare = min(flight_dict.values(), key=lambda x: x[1])
 
-    # 필요한 정보 추출
     segment = lowest_flight.get("segment", {})
     dep = segment.get("departure", {})
     arr = segment.get("arrival", {})
     airline_code = segment.get("airlineCode", "")
     airline_name = data.get("status", {}).get("airlinesCodeMap", {}).get(airline_code, airline_code)
+    kst_now = datetime.now(timezone.utc) + timedelta(hours=9)
     check_time = kst_now.strftime("%Y-%m-%d %H:%M:%S")
 
     result = {

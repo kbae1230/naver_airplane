@@ -1,19 +1,21 @@
 import os
-import streamlit as st
 import requests
 import json
-from datetime import datetime, timedelta
 import time
+from datetime import datetime, timedelta, timezone
 
-from json2notion import load_json_data, create_notion_page
+import streamlit as st
+
+from notion_api import load_json_data, create_notion_page
 from processing import filter_flights, load_existing_data, save_data
 
-kst_now = datetime.utcnow() + timedelta(hours=9)
-kst_today = kst_now.date()
 
+kst_now = datetime.now(timezone.utc) + timedelta(hours=9)
+kst_today = kst_now.date()
+    
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_PATH = os.path.join(BASE_DIR, "data.json")
-AIRPORT = ["CJU", "GMP", "PUS", "ICN", "CJJ"]
+AIRPORT = sorted(["CJU", "GMP", "PUS", "ICN", "CJJ"])
 
 st.set_page_config(page_title="최저가 항공권 추적기", layout="centered")
 st.title("✈️ 항공편 추적기")
@@ -21,14 +23,14 @@ st.title("✈️ 항공편 추적기")
 # 세션 상태 초기화
 if "monitoring" not in st.session_state:
     st.session_state.monitoring = False
-AIRPORT.sort()
+    
 # 입력 UI
 departure_airport = st.selectbox("출발 공항", AIRPORT)
 arrival_airport = st.selectbox("도착 공항", AIRPORT)
 departure_date_obj = st.date_input("탑승 날짜", value=kst_today)
 departure_date = departure_date_obj.strftime("%Y%m%d")
 time_options = [f"{h:02d}00" for h in range(0, 24)]
-start_time = st.selectbox("출발 시간 범위 시작", time_options, index=8)  # 기본: 08시
+start_time = st.selectbox("출발 시간 범위 시작", time_options, index=8)
 end_time = st.selectbox("출발 시간 범위 끝", time_options, index=12)
 
 # 버튼 영역
@@ -50,7 +52,7 @@ else:
             else:
                 st.session_state.monitoring = True
                 # st.success("✅ 항공편 모니터링을 시작합니다.")
-                st.rerun()  # 즉시 중지 버튼으로 전환되게
+                st.rerun()
 
 # 모니터링 로직
 def run_monitoring():
@@ -121,7 +123,6 @@ def run_monitoring():
         except json.JSONDecodeError as e:
             st.error(f"❌ JSON 파싱 실패: {e}")
             # st.text_area("응답 원본", raw_text[:500])
-
 
 # 모니터링 상태면 주기 실행
 if st.session_state.monitoring:

@@ -1,10 +1,8 @@
 
 import json
 import requests
-import logging
 
 import streamlit as st
-
 
 NOTION_TOKEN = st.secrets["notion"]["token"]
 DATABASE_ID = st.secrets["notion"]["database"]
@@ -17,14 +15,11 @@ headers = {
     "Notion-Version": NOTION_VERSION
 }
 
-# 1. JSON 파일 불러오기
 def load_json_data(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
         return json.load(f)
 
-# 2. Notion에 페이지 생성 요청
 def create_notion_page(data):
-    # 아래는 예시로, 데이터 구조에 맞게 수정 필요
     data = {
         "parent": { "database_id": DATABASE_ID },
         "properties": {
@@ -83,7 +78,7 @@ def create_notion_page(data):
                 ]
             },
             "fare": {
-                "number": data['fare']  # ← 여기만 바뀐 부분
+                "number": data['fare']
             },
             # 다른 속성들도 여기에 추가
         }
@@ -101,14 +96,13 @@ def create_notion_page(data):
         print(f"❌ 업로드 실패: 상태코드: {response.status_code}")
         print(response.text)
         
-        
 def add_comment_to_page(comment_text):
     data = {
         "parent": { "page_id": PAGE_ID },
         "properties": {
 		"title": {
-      "title": [{ "type": "text", "text": { "content": comment_text } }]
-		}
+                "title": [{ "type": "text", "text": { "content": comment_text } }]
+                }
 	},
     }
     response = requests.post(
