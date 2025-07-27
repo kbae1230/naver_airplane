@@ -1,15 +1,19 @@
+import os
 import streamlit as st
 import requests
 import json
 from datetime import datetime, timedelta
 import time
 
-from config import DATA_PATH, AIRPORT
 from json2notion import load_json_data, create_notion_page
 from processing import filter_flights, load_existing_data, save_data
 
 kst_now = datetime.utcnow() + timedelta(hours=9)
 kst_today = kst_now.date()
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_PATH = os.path.join(BASE_DIR, "data.json")
+AIRPORT = ["CJU", "GMP", "PUS", "ICN", "CJJ"]
 
 st.set_page_config(page_title="최저가 항공권 추적기", layout="centered")
 st.title("✈️ 항공편 추적기")
@@ -102,7 +106,7 @@ def run_monitoring():
                 st.info("❗조건에 맞는 항공편이 없습니다.")
             else:
                 new_fare = filtered_result.get("fare", float("inf"))
-                existing_data = load_existing_data()
+                existing_data = load_existing_data(DATA_PATH)
                 existing_fare = existing_data.get("fare", float("inf")) if existing_data else None
 
                 if not existing_fare or new_fare != existing_fare:

@@ -3,7 +3,13 @@ import json
 import requests
 import logging
 
-from config import *
+import streamlit as st
+
+
+NOTION_TOKEN = st.secrets["notion"]["token"]
+DATABASE_ID = st.secrets["notion"]["database"]
+PAGE_ID = st.secrets["notion"]["page"]
+NOTION_VERSION = "2022-06-28"
 
 headers = {
     "Authorization": f"Bearer {NOTION_TOKEN}",

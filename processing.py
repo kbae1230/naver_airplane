@@ -1,12 +1,11 @@
 import os
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
-from config import DATA_PATH
 
-kst_now = datetime.utcnow() + timedelta(hours=9)
+kst_now = datetime.now(timezone.utc) + timedelta(hours=9)
 
-def load_existing_data(path=DATA_PATH):
+def load_existing_data(path):
     if os.path.exists(path):
         with open(path, "r", encoding="utf-8") as f:
             try:
@@ -16,7 +15,7 @@ def load_existing_data(path=DATA_PATH):
                 return None
     return None
 
-def save_data(data, path=DATA_PATH):
+def save_data(data, path):
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
