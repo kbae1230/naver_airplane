@@ -1,0 +1,17 @@
+name: Keep Streamlit App Awake
+
+# 원하는 트리거 설정 (예: 매 10분마다)
+on:
+  schedule:
+    - cron: '*/10 * * * *'  # 10분마다 실행
+  workflow_dispatch:  # 수동 실행 가능
+
+jobs:
+  ping_streamlit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send HTTP request to Streamlit app
+        uses: actions/http-client@v1
+        with:
+          url: https://naverairplane.streamlit.app/  # 본인의 Streamlit 앱 URL로 변경
