@@ -15,7 +15,24 @@ kst_today = kst_now.date()
     
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_PATH = os.path.join(BASE_DIR, "data.json")
-AIRPORT = sorted(["CJU", "GMP", "PUS", "ICN", "CJJ"])
+
+airport_dict = {
+    "김포국제공항": "GMP",
+    "인천국제공항": "ICN",
+    "김해국제공항": "PUS",
+    "제주국제공항": "CJU",
+    "청주국제공항": "CJJ",
+    "대구국제공항": "TAE",
+    "양양국제공항": "YNY",
+    "무안국제공항": "MWX",
+    "여수공항": "RSU",
+    "사천공항": "HIN",
+    "포항공항": "KPO",
+    "군산공항": "KUV",
+    "원주공항": "WJU",
+    "울산공항": "USN"
+}
+airport_names = sorted(airport_dict.keys())
 
 st.set_page_config(page_title="최저가 항공권 추적기", layout="centered")
 st.title("✈️ 항공편 추적기")
@@ -25,8 +42,11 @@ if "monitoring" not in st.session_state:
     st.session_state.monitoring = False
     
 # 입력 UI
-departure_airport = st.selectbox("출발 공항", AIRPORT)
-arrival_airport = st.selectbox("도착 공항", AIRPORT)
+selected_korean_departure_airport  = st.selectbox("출발 공항", airport_names, index=airport_names.index("제주국제공항"))
+departure_airport = airport_dict[selected_korean_departure_airport]
+selected_korean_arrival_airport = st.selectbox("도착 공항", index=airport_names.index("청주국제공항"))
+arrival_airport = airport_dict[selected_korean_arrival_airport]
+
 departure_date_obj = st.date_input("탑승 날짜", value=kst_today)
 departure_date = departure_date_obj.strftime("%Y%m%d")
 time_options = [f"{h:02d}00" for h in range(0, 24)]
