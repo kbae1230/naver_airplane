@@ -27,4 +27,4 @@ jobs:
         env:
           # 자동 푸시 권한을 위해 토큰 사용
           # GITHUB_TOKEN은 기본으로 제공됨
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
