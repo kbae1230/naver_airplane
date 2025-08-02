@@ -127,6 +127,7 @@ def run_monitoring():
 # 모니터링 상태면 주기 실행
 if st.session_state.monitoring:
     run_monitoring()
-    st.info("⏱️ 60초 후 다음 조회가 자동 실행됩니다.")
+    # st.info("⏱️ 60초 후 다음 조회가 자동 실행됩니다.")
+    st.markdown("🔗 [항공권 추적차트 보기](https://kbae.notion.site/23d9c513049880398cdaf5a2e4697e40?source=copy_link)")
     time.sleep(60)
     st.rerun()
