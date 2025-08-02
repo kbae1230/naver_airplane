@@ -42,10 +42,20 @@ if "monitoring" not in st.session_state:
     st.session_state.monitoring = False
     
 # 입력 UI
-selected_korean_departure_airport  = st.selectbox("출발 공항", airport_names, index=airport_names.index("제주국제공항"))
+selected_korean_departure_airport  = st.selectbox(
+    "출발 공항", 
+    airport_names, 
+    index=airport_names.index("제주국제공항")
+)
 departure_airport = airport_dict[selected_korean_departure_airport]
-selected_korean_arrival_airport = st.selectbox("도착 공항", index=airport_names.index("청주국제공항"))
+
+selected_korean_arrival_airport = st.selectbox(
+    "도착 공항", 
+    airport_names, 
+    index=airport_names.index("청주국제공항")
+)
 arrival_airport = airport_dict[selected_korean_arrival_airport]
+
 
 departure_date_obj = st.date_input("탑승 날짜", value=kst_today)
 departure_date = departure_date_obj.strftime("%Y%m%d")
