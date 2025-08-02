@@ -1,29 +1,29 @@
-name: Periodic Empty Commit Push
+# name: Periodic Empty Commit Push
 
-on:
-  schedule:
-    - cron: '0 * * * *'  # 매 시간마다 실행
-  workflow_dispatch:
+# on:
+#   schedule:
+#     - cron: '0 * * * *'  # 매 시간마다 실행
+#   workflow_dispatch:
 
-jobs:
-  push-empty-commit:
-    runs-on: ubuntu-latest
+# jobs:
+#   push-empty-commit:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+#     steps:
+#       - name: Checkout repo
+#         uses: actions/checkout@v4
+#         with:
+#           fetch-depth: 0
 
-      - name: Set up Git and push
-        run: |
-          echo "PAT_TOKEN length: ${#PAT_TOKEN}"
-          echo "TEST length: ${#TTT}"
+#       - name: Set up Git and push
+#         run: |
+#           echo "PAT_TOKEN length: ${#PAT_TOKEN}"
+#           echo "TEST length: ${#TTT}"
 
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          # ✅ 리모트에 PAT 포함된 주소 설정
-          git remote set-url origin https://kbae1230:${{ secrets.PAT_TOKEN }}@github.com/kbae1230/naver_airplane.git
-          git remote -v
-          git commit --allow-empty -m "chore: periodic empty commit to keep repo active"
-          git push origin master
+#           git config --global user.name "github-actions[bot]"
+#           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+#           # ✅ 리모트에 PAT 포함된 주소 설정
+#           git remote set-url origin https://kbae1230:${{ secrets.PAT_TOKEN }}@github.com/kbae1230/naver_airplane.git
+#           git remote -v
+#           git commit --allow-empty -m "chore: periodic empty commit to keep repo active"
+#           git push origin master
