@@ -116,9 +116,9 @@ def run_monitoring():
                     save_data(filtered_result, DATA_PATH)
                     notion_data = load_json_data(DATA_PATH)
                     create_notion_page(notion_data)
-                    st.success(f"✅ 새로운 최저가 발견! {new_fare:,}원으로 Notion 업데이트 완료")
+                    st.success(f"✅ 새로운 최저가 발견! {new_fare:,}원으로 업데이트")
                 else:
-                    st.info("ℹ️ 기존 운임이 더 저렴하거나 동일하므로 변경하지 않음.")
+                    st.info(f"ℹ️ 기존 운임 {existing_fare:,}원이 더 저렴하거나 동일하므로 변경하지 않음.")
 
         except json.JSONDecodeError as e:
             st.error(f"❌ JSON 파싱 실패: {e}")
