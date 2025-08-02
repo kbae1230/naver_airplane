@@ -17,6 +17,7 @@ jobs:
 
       - name: Set up Git and push
         run: |
+          echo "PAT_TOKEN length: ${#PAT_TOKEN}"
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           # ✅ 리모트에 PAT 포함된 주소 설정
