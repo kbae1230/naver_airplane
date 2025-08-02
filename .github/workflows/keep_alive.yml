@@ -1,15 +1,30 @@
-name: Keep Streamlit App Awake
+name: Periodic Empty Commit Push
 
-# 원하는 트리거 설정 (예: 매 10분마다)
 on:
   schedule:
-    - cron: '*/10 * * * *'  # 10분마다 실행
-  workflow_dispatch:  # 수동 실행 가능
+    - cron: '*/1 * * * *'  # 매시간 정각 실행 (UTC 기준)
+  workflow_dispatch:    # 수동 실행 가능
 
 jobs:
-  ping_streamlit:
+  push-empty-commit:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Ping Streamlit app with curl
-        run: curl -fsSL https://naverairplane.streamlit.app/ || true
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 전체 히스토리 가져오기 (필수)
+
+      - name: Configure Git user
+        run: |
+          git config user.name "kbae1230"
+          git config user.email "cok2117@gmail.com"
+
+      - name: Create empty commit and push
+        run: |
+          git commit --allow-empty -m "chore: periodic empty commit to keep repo active"
+          git push
+        env:
+          # 자동 푸시 권한을 위해 토큰 사용
+          # GITHUB_TOKEN은 기본으로 제공됨
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
