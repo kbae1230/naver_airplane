@@ -16,14 +16,14 @@ jobs:
           fetch-depth: 0
       - name: Check remote URL
         run: git remote -v
-      # - name: Configure Git
-      #   run: |
-      #     git config user.name "github-actions[bot]"
-      #     git config user.email "github-actions[bot]@users.noreply.github.com"
-      #     # ✅ 리모트 URL을 PAT 포함된 인증 방식으로 설정
-      #     git remote set-url origin https://kbae1230:${{ secrets.PAT_TOKEN }}@github.com/kbae1230/naver_airplane.git
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          # ✅ 리모트 URL을 PAT 포함된 인증 방식으로 설정
+          git remote set-url origin https://kbae1230:${{ secrets.PAT_TOKEN }}@github.com/kbae1230/naver_airplane.git
 
-      # - name: Create and push empty commit
-      #   run: |
-      #     git commit --allow-empty -m "chore: periodic empty commit to keep repo active"
-      #     git push origin master
+      - name: Create and push empty commit
+        run: |
+          git commit --allow-empty -m "chore: periodic empty commit to keep repo active"
+          git push origin master
