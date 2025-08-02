@@ -2,8 +2,8 @@ name: Periodic Empty Commit Push
 
 on:
   schedule:
-    - cron: '*/1 * * * *'  # 매시간 정각 실행 (UTC 기준)
-  workflow_dispatch:    # 수동 실행 가능
+    - cron: '0 * * * *'  # 매시간 정각 실행
+  workflow_dispatch:
 
 jobs:
   push-empty-commit:
@@ -13,18 +13,16 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # 전체 히스토리 가져오기 (필수)
+          fetch-depth: 0
 
-      - name: Configure Git user
+      - name: Configure Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          # ✅ 리모트 URL을 PAT 포함된 인증 방식으로 설정
+          git remote set-url origin https://kbae1230:${{ secrets.PAT_TOKEN }}@github.com/kbae1230/naver_airplane.git
 
-      - name: Create empty commit and push
+      - name: Create and push empty commit
         run: |
           git commit --allow-empty -m "chore: periodic empty commit to keep repo active"
-          git push
-        env:
-          # 자동 푸시 권한을 위해 토큰 사용
-          # GITHUB_TOKEN은 기본으로 제공됨
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          git push origin master
