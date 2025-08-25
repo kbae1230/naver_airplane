@@ -33,10 +33,9 @@ naver_airplane/
 ```
 
 ## ⚠️ Secret 설정
-Step 1. Make a toml file
+Step 1. Make a toml file named with secrets.toml under .streamlit
 
 ```text
-# .streamlit/secrets.toml
 [notion]
 token = ""
 database = ""
