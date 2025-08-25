@@ -29,8 +29,8 @@ naver_airplane/
 ├── data.json           # 애플리케이션 데이터 파일
 ├── .devcontainer/      # 개발 환경 설정 파일
 ├── .github/workflows/  # GitHub Actions 워크플로우 설정 파일
-├── .streamlit/secrets.toml # Secrets
-└── .vscode/            # VS Code 설정 파일
+├── .vscode/            # VS Code 설정 파일
+└── .streamlit/secrets.toml # Secrets (중요)
 ```
 
 ## ⚠️ Secret 설정
