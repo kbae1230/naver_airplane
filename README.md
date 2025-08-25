@@ -33,7 +33,7 @@ naver_airplane/
 ```
 
 ## ⚠️ Secret 설정
-Step 1. Make a toml file named with secrets.toml under .streamlit
+Step 1. Make a toml file like below under .streamlit folder
 
 ```text
 [notion]
