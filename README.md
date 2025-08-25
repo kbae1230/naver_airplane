@@ -1,8 +1,10 @@
-<img width="786" height="575" alt="image" src="https://github.com/user-attachments/assets/8ddc6e99-20ee-4bdf-be1d-e1b0162683e5" />
+
 
 # naver_airplane
 
 **naver_airplane**은 [Notion API](https://www.notion.so/)와 통합하여 항공편 정보를 추적하고 시각화 및 알림을 받는 Python 기반의 애플리케이션입니다.
+
+<img width="786" height="575" alt="image" src="https://github.com/user-attachments/assets/8ddc6e99-20ee-4bdf-be1d-e1b0162683e5" />
 
 ## 🚀 기능
 
