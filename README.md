@@ -19,12 +19,12 @@
 
 ## 📁 파일 구조
 
+```text
 naver_airplane/
-├── app.py # 메인 애플리케이션 코드
-├── notion_api.py # Notion API와의 통신 코드
-├── processing.py # 데이터 처리 및 필터링 코드
-├── data.json # 애플리케이션 데이터 파일
-├── .devcontainer/ # 개발 환경 설정 파일
-├── .github/workflows/ # GitHub Actions 워크플로우 설정 파일
-├── .streamlit/secrets.toml # 계정 정보
-└── .vscode/ # VS Code debugging
+├── app.py              # 메인 애플리케이션 코드
+├── notion_api.py       # Notion API와의 통신 코드
+├── processing.py       # 데이터 처리 및 필터링 코드
+├── data.json           # 애플리케이션 데이터 파일
+├── .devcontainer/      # 개발 환경 설정 파일
+├── .github/workflows/  # GitHub Actions 워크플로우 설정 파일
+└── .vscode/            # VS Code 설정 파일
