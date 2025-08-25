@@ -43,6 +43,6 @@ page = ""
 
 [email]
 id = ""
-pw = "" # This is an APP PASSWORD not Real password. How to generate it (https://support.google.com/mail/thread/205453566/how-to-generate-an-app-password?hl=en")
+pw = "" # This is an APP PASSWORD not Address password. How to generate it (https://support.google.com/mail/thread/205453566/how-to-generate-an-app-password?hl=en")
 ```
 Step 2. Set Secrets in App settings (https://share.streamlit.io/)
