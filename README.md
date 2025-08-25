@@ -2,7 +2,7 @@
 
 ## ✈️ 소개
 
-**[naver_airplane](https://naverairplane.streamlit.app/)**은 [노션 API](https://www.notion.so/)와 네이버 항공권 API를 통합하여 항공편 정보를 추적하고 시각화 및 알림을 받는 애플리케이션입니다.
+[**naver_airplane**](https://naverairplane.streamlit.app/)은 [노션 API](https://www.notion.so/)와 네이버 항공권 API를 통합하여 항공편 정보를 추적하고 시각화 및 알림을 받는 애플리케이션입니다.
 
 <img width="786" height="575" alt="image" src="https://github.com/user-attachments/assets/8ddc6e99-20ee-4bdf-be1d-e1b0162683e5" />
 https://naverairplane.streamlit.app/
