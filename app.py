@@ -40,10 +40,15 @@ airport_names = sorted(airport_dict.keys())
 notion_page = "https://kbae.notion.site/23d9c513049880398cdaf5a2e4697e40?source=copy_link"
 url = "https://flight-api.naver.com/flight/domestic/searchFlights"
 headers = {
-    "Accept": "text/event-stream",
+    # "Accept": "text/event-stream",
+    "Accept": "application/json, text/plain, */*",
     "Content-Type": "application/json",
     "Origin": "https://flight.naver.com",
-    "User-Agent": "Mozilla/5.0"
+    "User-Agent": (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/128.0.0.0 Safari/537.36"
+)
 }
 
 st.set_page_config(page_title="최저가 항공권 추적기", layout="centered")
@@ -178,7 +183,6 @@ def run_monitoring():
             response = requests.post(url, headers=headers, json=payload)
             raw_text = response.content.decode("utf-8")
             json_lines = [line for line in raw_text.splitlines() if line.startswith("data:")]
-
             json_str = json_lines[-1].lstrip("data:").strip()
             data = json.loads(json_str)
             filtered_result = filter_flights(data, start_time, end_time)
