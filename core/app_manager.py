@@ -4,6 +4,7 @@ import time
 import streamlit as st
 
 from utils.common import pretty_json
+# from core.flight_api import FlightAPI
 from core.flight_monitor import FlightMonitor
 
 
@@ -76,14 +77,17 @@ class AppManager:
     def run_monitoring(self):
         """Streamlit에서 모니터링 실행"""
         payload = self.get_payload
-        monitor = FlightMonitor()
+        s = FlightMonitor()
         start_time = self.start_time
         end_time = self.end_time
         data_path = self.data_path
         to_email = self.to_email
+        dep_date = self.departure_date
+        dep_airport = self.departure_airport
+        arr_airport = self.arrival_airport
         with st.spinner("🔄 항공편을 조회 중입니다..."):
             try:
-                data = FlightMonitor(monitor)
+                data = s.search_flights(dep_airport, arr_airport, dep_date)
                 filtered_result = self.processor.filter(data, start_time, end_time)
 
                 if not filtered_result:
