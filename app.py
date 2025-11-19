@@ -37,7 +37,6 @@ airport_dict = {
     "원주공항": "WJU",
     "울산공항": "USN"
 }
-
 airport_names = sorted(airport_dict.keys())
 notion_page = "https://kbae.notion.site/23d9c513049880398cdaf5a2e4697e40?source=copy_link"
 
@@ -53,89 +52,62 @@ headers = {
     )
 }
 
-# -------------------------------------------------
-# Streamlit 기본 설정
-# -------------------------------------------------
 st.set_page_config(page_title="최저가 항공권 추적기", layout="centered")
 st.title("✈️ 항공편 추적기")
 
-# -------------------------------------------------
-# 세션 상태 초기화
-# -------------------------------------------------
+# 세션 초기화
 if "monitoring" not in st.session_state:
     st.session_state.monitoring = False
+if "departure_index" not in st.session_state:
+    st.session_state.departure_index = airport_names.index("제주국제공항")
+if "arrival_index" not in st.session_state:
+    st.session_state.arrival_index = airport_names.index("청주국제공항")
 
-if "departure" not in st.session_state:
-    st.session_state.departure = "제주국제공항"
-if "arrival" not in st.session_state:
-    st.session_state.arrival = "청주국제공항"
-
-# -------------------------------------------------
-# 선택값 변경 시 session 상태에 반영하는 함수
-# -------------------------------------------------
-def update_departure():
-    st.session_state.departure = st.session_state.departure_select
-
-def update_arrival():
-    st.session_state.arrival = st.session_state.arrival_select
-
-# -------------------------------------------------
-# UI - 공항 선택 영역(스위치 포함)
-# -------------------------------------------------
+# UI: selectbox + switch
 col1, col2, col3 = st.columns([4, 1, 4])
-
 with col1:
-    selected_korean_departure_airport = st.selectbox(
+    departure_index = st.selectbox(
         "출발 공항",
-        airport_names,
-        index=airport_names.index(st.session_state.departure),
-        key="departure_select",
-        on_change=update_departure
+        range(len(airport_names)),
+        index=st.session_state.departure_index,
+        format_func=lambda x: airport_names[x],
+        key="departure_selectbox"
     )
-    departure_airport = airport_dict[st.session_state.departure]
-
 with col2:
     st.write("")
     if st.button("↔"):
-        st.session_state.departure, st.session_state.arrival = (
-            st.session_state.arrival,
-            st.session_state.departure,
-        )
+        departure_index, arrival_index = st.session_state.arrival_index, st.session_state.departure_index
+        st.session_state.departure_index = departure_index
+        st.session_state.arrival_index = arrival_index
         st.rerun()
-
 with col3:
-    selected_korean_arrival_airport = st.selectbox(
+    arrival_index = st.selectbox(
         "도착 공항",
-        airport_names,
-        index=airport_names.index(st.session_state.arrival),
-        key="arrival_select",
-        on_change=update_arrival
+        range(len(airport_names)),
+        index=st.session_state.arrival_index,
+        format_func=lambda x: airport_names[x],
+        key="arrival_selectbox"
     )
-    arrival_airport = airport_dict[st.session_state.arrival]
 
-# -------------------------------------------------
-# 날짜 및 시간 선택
-# -------------------------------------------------
+# 선택된 index를 session_state에 저장
+st.session_state.departure_index = departure_index
+st.session_state.arrival_index = arrival_index
+
+departure_airport = airport_dict[airport_names[departure_index]]
+arrival_airport = airport_dict[airport_names[arrival_index]]
+
+# 날짜, 시간, 최대 금액 입력
 departure_date_obj = st.date_input("탑승 날짜", value=kst_today)
 departure_date = departure_date_obj.strftime("%Y%m%d")
-
-time_options = [f"{h:02d}00" for h in range(24)]
+time_options = [f"{h:02d}00" for h in range(0, 24)]
 start_time = st.selectbox("출발 시간 범위 시작", time_options, index=6)
 end_time = st.selectbox("출발 시간 범위 끝", time_options, index=12)
 
-# -------------------------------------------------
-# 최대 금액 입력 (선택)
-# -------------------------------------------------
 max_price_input = st.text_input("최대 금액(원)", value="")
-max_price = None
-if max_price_input.strip().isdigit():
-    max_price = int(max_price_input)
+max_price = int(max_price_input) if max_price_input.strip().isdigit() else None
 
 to_email = st.text_input("받는 사람 이메일")
 
-# -------------------------------------------------
-# API 요청 payload
-# -------------------------------------------------
 payload = {
     "type": "domestic",
     "device": "PC",
@@ -147,29 +119,15 @@ payload = {
             "departureDate": departure_date
         }
     ],
-    "person": {
-        "adult": 1,
-        "child": 0,
-        "infant": 0
-    },
+    "person": {"adult": 1, "child": 0, "infant": 0},
     "tripType": "OW",
     "initialRequest": True,
-    "flightFilter": {
-        "filter": {"type": "departure"},
-        "limit": 50,
-        "skip": 0,
-        "sort": {
-            "segment.departure.time": 1,
-            "minFare": 1
-        }
-    }
+    "flightFilter": {"filter": {"type": "departure"}, "limit": 50, "skip": 0,
+                     "sort": {"segment.departure.time": 1, "minFare": 1}}
 }
 
+# 모니터링 버튼
 placeholder = st.empty()
-
-# -------------------------------------------------
-# 모니터링 버튼 UI
-# -------------------------------------------------
 if st.session_state.monitoring:
     with placeholder.container():
         stop = st.button("🛑 모니터링 중지", type="primary", use_container_width=True)
@@ -186,17 +144,15 @@ else:
                 st.session_state.monitoring = True
                 st.rerun()
 
-# -------------------------------------------------
-# 이메일 전송 함수
-# -------------------------------------------------
+# 이메일 발송
 def send_email(to_email, subject, body, from_email, password):
     try:
         msg = MIMEMultipart()
         msg['From'] = from_email
         msg['To'] = to_email
         msg['Subject'] = subject
-
         msg.attach(MIMEText(body, 'plain'))
+
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
         server.login(from_email, password)
@@ -206,15 +162,12 @@ def send_email(to_email, subject, body, from_email, password):
     except Exception as e:
         return str(e)
 
-# -------------------------------------------------
-# 모니터링 실행 로직
-# -------------------------------------------------
+# 모니터링 실행
 def run_monitoring():
     with st.spinner("🔄 항공편을 조회 중입니다..."):
         try:
             response = requests.post(url, headers=headers, json=payload)
             raw_text = response.content.decode("utf-8")
-
             json_lines = [line for line in raw_text.splitlines() if line.startswith("data:")]
             json_str = json_lines[-1].lstrip("data:").strip()
             data = json.loads(json_str)
@@ -222,14 +175,14 @@ def run_monitoring():
             filtered_result = filter_flights(data, start_time, end_time)
 
             if not filtered_result:
-                save_data(filtered_result, DATA_PATH)
                 st.info("❗조건에 맞는 항공편이 없습니다.")
+                save_data(filtered_result, DATA_PATH)
                 return
 
             # 최대 금액 필터
             if max_price is not None:
-                new_fare = filtered_result.get("fare", float("inf"))
-                if new_fare > max_price:
+                fare = filtered_result.get("fare", float("inf"))
+                if fare > max_price:
                     st.info(f"💸 {max_price:,}원 이하 항공편이 없습니다.")
                     return
 
@@ -240,13 +193,13 @@ def run_monitoring():
                 save_data(filtered_result, DATA_PATH)
                 notion_data = load_json_data(DATA_PATH)
                 create_notion_page(notion_data)
-                new_fare = filtered_result.get("fare")
-                st.success(f"✅ 새로운 최저가 발견! {new_fare:,}원으로 업데이트")
 
-                subject = "[알림]항공권 발견"
-                body = json.dumps(filtered_result, ensure_ascii=False, indent=2)
+                fare = filtered_result.get("fare")
+                st.success(f"✅ 새로운 최저가 발견! {fare:,}원으로 업데이트")
 
-                if to_email and subject and body:
+                if to_email:
+                    subject = "[알림]항공권 발견"
+                    body = json.dumps(filtered_result, ensure_ascii=False, indent=2)
                     result = send_email(to_email, subject, body, EMAIL, PASSWORD)
                     if result == True:
                         st.success("메일을 성공적으로 보냈습니다!")
@@ -258,9 +211,7 @@ def run_monitoring():
         except json.JSONDecodeError as e:
             st.error(f"❌ JSON 파싱 실패: {e}")
 
-# -------------------------------------------------
-# 모니터링 동작
-# -------------------------------------------------
+# 모니터링 상태면 주기 실행
 if st.session_state.monitoring:
     run_monitoring()
     st.markdown(f"🔗 [항공권 추적차트 보기]({notion_page})")
